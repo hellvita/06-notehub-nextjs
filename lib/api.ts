@@ -37,6 +37,11 @@ export const fetchNotes = async ({
   return data;
 };
 
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const { data } = await axios.get<Note>(`/notes/${id}`);
+  return data;
+};
+
 export const createNote = async (note: NewNote): Promise<Note> => {
   const { data } = await axios.post<Note>("/notes", note);
   return data;

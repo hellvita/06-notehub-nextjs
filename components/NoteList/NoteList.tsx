@@ -1,4 +1,5 @@
 import { Note } from "@/types/note";
+import Link from "next/link";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteNote } from "@/lib/api";
 import toast from "react-hot-toast";
@@ -36,6 +37,7 @@ export default function NoteList({ notes }: NoteListProps) {
           <p className={css.content}>{note.content ?? ""}</p>
           <div className={css.footer}>
             <span className={css.tag}>{note.tag}</span>
+            <Link href={`/notes/${note.id}`}>View details</Link>
             <button
               onClick={() => handleDeleteNote(note.id)}
               className={css.button}
