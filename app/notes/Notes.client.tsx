@@ -37,6 +37,8 @@ export default function NotesClient() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  if (isError) return <Error error={error} />;
+
   return (
     <div className={css.notes_page}>
       <header className={css.toolbar}>
@@ -55,7 +57,6 @@ export default function NotesClient() {
       {isSuccess && data.notes.length === 0 && searchQuery !== "" && (
         <NoResultMessage invalidQuery={searchQuery} />
       )}
-      {isError && <Error error={error} />}
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <Modal onClose={closeModal}>
