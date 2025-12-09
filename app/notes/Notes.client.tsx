@@ -9,6 +9,7 @@ import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import NoResultMessage from "@/components/NoResultMessage/NoResultMessage";
 import NoteList from "@/components/NoteList/NoteList";
+import Error from "./error";
 import css from "./Notes.module.css";
 
 export default function NotesClient() {
@@ -16,7 +17,7 @@ export default function NotesClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isError, error } = useQuery({
     queryKey: ["notes", currentPage, searchQuery],
     queryFn: () =>
       fetchNotes({
@@ -54,6 +55,7 @@ export default function NotesClient() {
       {isSuccess && data.notes.length === 0 && searchQuery !== "" && (
         <NoResultMessage invalidQuery={searchQuery} />
       )}
+      {isError && <Error error={error} />}
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <Modal onClose={closeModal}>
