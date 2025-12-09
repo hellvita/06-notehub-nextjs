@@ -1,19 +1,24 @@
 "use client";
 import { fetchNotes } from "@/lib/api";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import NoteList from "@/components/NoteList/NoteList";
+import Pagination from "@/components/Pagination/Pagination";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import css from "./Notes.module.css";
 
 export default function NotesClient() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data } = useQuery({
-    queryKey: ["notes"],
-    queryFn: () => fetchNotes({}),
+  const { data, isSuccess } = useQuery({
+    queryKey: ["notes", currentPage],
+    queryFn: () => fetchNotes({ page: currentPage }),
+    placeholderData: keepPreviousData,
   });
+
+  const totalPages = data?.totalPages ?? 0;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -21,6 +26,13 @@ export default function NotesClient() {
   return (
     <div className={css.notes_page}>
       <header className={css.toolbar}>
+        {isSuccess && totalPages > 1 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
         <button className={css.button} onClick={openModal}>
           Create note +
         </button>
