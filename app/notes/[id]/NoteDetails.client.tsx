@@ -21,7 +21,7 @@ export default function NoteDetailsClient() {
 
   if (isLoading) return <Loading />;
 
-  if (error || !note) throw error;
+  if (error || !note) throw error ? error : new Error("Data was not loaded");
 
   const formattedDate = note.updatedAt
     ? `Updated at: ${note.updatedAt}`
