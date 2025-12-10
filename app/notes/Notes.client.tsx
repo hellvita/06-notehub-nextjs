@@ -9,7 +9,6 @@ import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import NoResultMessage from "@/components/NoResultMessage/NoResultMessage";
 import NoteList from "@/components/NoteList/NoteList";
-import Error from "./error";
 import css from "./Notes.module.css";
 
 export default function NotesClient() {
@@ -17,7 +16,7 @@ export default function NotesClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data, isSuccess, isError, error } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ["notes", currentPage, searchQuery],
     queryFn: () =>
       fetchNotes({
@@ -25,6 +24,7 @@ export default function NotesClient() {
         search: searchQuery !== "" ? searchQuery : undefined,
       }),
     placeholderData: keepPreviousData,
+    throwOnError: true,
   });
 
   const totalPages = data?.totalPages ?? 0;
@@ -36,8 +36,6 @@ export default function NotesClient() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  if (isError) return <Error error={error} />;
 
   return (
     <div className={css.notes_page}>
